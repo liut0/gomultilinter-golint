@@ -4,14 +4,13 @@ import (
 	"github.com/liut0/gomultilinter/api"
 )
 
-func RunGoLinter(apiPkg *api.Package) []Problem {
-
+func RunGoLinter(apiFile *api.File) []Problem {
 	linterPkg := &pkg{
-		fset:  apiPkg.FSet,
+		fset:  apiFile.FSet,
 		files: map[string]*file{},
 
-		typesPkg:  apiPkg.PkgInfo.Pkg,
-		typesInfo: &apiPkg.PkgInfo.Info,
+		typesPkg:  apiFile.PkgInfo.Pkg,
+		typesInfo: &apiFile.PkgInfo.Info,
 
 		sortable: map[string]bool{},
 		main:     false,
@@ -19,17 +18,15 @@ func RunGoLinter(apiPkg *api.Package) []Problem {
 		problems: []Problem{},
 	}
 
-	for _, f := range apiPkg.PkgInfo.Files {
-		pos := apiPkg.FSet.Position(f.Pos())
-		file := &file{
-			fset:     apiPkg.FSet,
-			f:        f,
-			filename: pos.Filename,
-			pkg:      linterPkg,
-			src:      nil,
-		}
-		file.lint()
+	pos := apiFile.FSet.Position(apiFile.ASTFile.Pos())
+	file := &file{
+		fset:     apiFile.FSet,
+		f:        apiFile.ASTFile,
+		filename: pos.Filename,
+		pkg:      linterPkg,
+		src:      nil,
 	}
+	file.lint()
 
 	return linterPkg.problems
 }

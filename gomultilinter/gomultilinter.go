@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 
+	"github.com/liut0/gomultilinter-golint"
 	"github.com/liut0/gomultilinter/api"
-	"golang.org/x/lint"
 )
 
 type GoLint struct {
