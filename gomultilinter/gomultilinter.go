@@ -27,8 +27,8 @@ func (*GoLint) Name() string {
 	return "golint"
 }
 
-func (l *GoLint) LintPackage(ctx context.Context, pkg *api.Package, reporter api.IssueReporter) error {
-	for _, p := range lint.RunGoLinter(pkg) {
+func (l *GoLint) LintFile(ctx context.Context, file *api.File, reporter api.IssueReporter) error {
+	for _, p := range lint.RunGoLinter(file) {
 		if p.Confidence > l.MinConfidence {
 			reporter.Report(&api.Issue{
 				Position: p.Position,
