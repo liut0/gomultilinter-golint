@@ -7,12 +7,16 @@ import (
 	"golang.org/x/lint"
 )
 
-type GoLint struct{}
+type GoLint struct {
+	MinConfidence float64
+}
 
 var LinterFactory api.LinterFactory = &GoLint{}
 
 func (l *GoLint) NewLinterConfig() api.LinterConfig {
-	return l
+	return &GoLint{
+		MinConfidence: 0.8,
+	}
 }
 
 func (l *GoLint) NewLinter() (api.Linter, error) {
@@ -25,12 +29,14 @@ func (*GoLint) Name() string {
 
 func (l *GoLint) LintPackage(ctx context.Context, pkg *api.Package, reporter api.IssueReporter) error {
 	for _, p := range lint.RunGoLinter(pkg) {
-		reporter.Report(&api.Issue{
-			Position: p.Position,
-			Severity: api.SeverityWarning,
-			Category: p.Category,
-			Message:  p.Text,
-		})
+		if p.Confidence > l.MinConfidence {
+			reporter.Report(&api.Issue{
+				Position: p.Position,
+				Severity: api.SeverityWarning,
+				Category: p.Category,
+				Message:  p.Text,
+			})
+		}
 	}
 
 	return nil
