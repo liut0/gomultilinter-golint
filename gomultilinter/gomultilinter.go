@@ -8,7 +8,7 @@ import (
 )
 
 type GoLint struct {
-	MinConfidence float64
+	MinConfidence float64 `json:"min_confidence"`
 }
 
 var LinterFactory api.LinterFactory = &GoLint{}
