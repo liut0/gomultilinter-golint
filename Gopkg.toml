@@ -1,0 +1,15 @@
+ignored = [
+    "github.com/liut0/gomultilinter/*"
+]
+
+[[constraint]]
+  branch = "master"
+  name = "golang.org/x/lint"
+
+[[constraint]]
+  branch = "master"
+  name = "golang.org/x/tools"
+
+[prune]
+  go-tests = true
+  unused-packages = true
